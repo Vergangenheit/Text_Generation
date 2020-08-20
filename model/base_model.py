@@ -1,8 +1,10 @@
 from abc import ABC, abstractmethod
 from utils.config import Config
 
+
 class BaseModel(object):
     """Abstract Model class that is inherited to all models"""
+
     def __init__(self, cfg):
         self.config = Config.from_json(cfg)
 

@@ -5,6 +5,7 @@ from pickle import dump
 import os
 import numpy as np
 from configs import config
+import string
 
 
 def load_doc(filename: str) -> str:
@@ -38,7 +39,7 @@ def clean_doc(doc: str) -> list:
     return tokens
 
 
-def create_seq(seq_length: int, tokens: list):
+def create_seq(seq_length: int, tokens: list) -> list:
     """organize tokens into sequences of text
     Args: seq_length(int), list of tokens(words)
     Returns: list containing sequences"""
@@ -97,7 +98,7 @@ def encode_sequences(lines: list) -> (list, int):
     return sequences, vocab_size
 
 
-def inputs_outputs(sequences: list, vocab_size:int) -> (np.array, np.array):
+def inputs_outputs(sequences: list, vocab_size: int) -> (np.array, np.array):
     """creates features and labels by seprating sequences' last token
     Args: sequences(list)
     Returns: features and labels (arrays)"""
@@ -105,5 +106,18 @@ def inputs_outputs(sequences: list, vocab_size:int) -> (np.array, np.array):
     X, y = sequences[:, :-1], sequences[:, -1]
     y = to_categorical(y, num_classes=vocab_size)
     # seq_length = X.shape[1]
+
+    return X, y
+
+
+def load_final(filename):
+    """puts all preprocessing functions together
+    Args: data filename(str)
+    Returns: features and labels arrays"""
+    text = load_doc(filename)
+    tokens = clean_doc(text)
+    sequences = create_seq(50, tokens)
+    sequences, vocab_size = encode_sequences(sequences)
+    X, y = inputs_outputs(sequences, vocab_size)
 
     return X, y
