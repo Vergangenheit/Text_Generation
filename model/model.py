@@ -18,8 +18,6 @@ class Lstm_Text_Gen(BaseModel):
     def load_data(self):
         self.X, self.y = load_final(self.config.data.train_file)
 
-
-
     def build(self):
         inputs = Input(shape=(self.seq_length, self.vocab_size))
         embed = Embedding(input_dim=self.vocab_size, output_dim=self.config.model.embedding_dim,
@@ -39,10 +37,6 @@ class Lstm_Text_Gen(BaseModel):
         callback_list = [checkpoint]
         self.model.fit(self.X, self.y, epochs=self.config.train.epochs, batch_size=self.config.train.batch_size,
                        verbose=2, callbacks=callback_list)
-    
+
     def evaluate(self):
         pass
-    
-    
-
-

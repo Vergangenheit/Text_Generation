@@ -9,8 +9,8 @@ MODEL_CKPT = os.path.join(SAVE_PATH, 'model_republic_epoch_{epoch:03d}')
 
 CFG = {
     "data": {
-        "train_file": TRAIN_FILE,
-        "valid_file": VALID_FILE
+        "train_file": os.path.join(PATH, TRAIN_FILE),
+        "valid_file": os.path.join(PATH, VALID_FILE)
     },
     "train": {
         "loss": 'categorical_crossentropy',

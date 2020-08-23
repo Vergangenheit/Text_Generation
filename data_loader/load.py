@@ -1,7 +1,7 @@
 import tensorflow as tf
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.utils import to_categorical
-from pickle import dump
+from pickle import load
 import os
 import numpy as np
 from configs import config
@@ -83,14 +83,11 @@ def load_sequences(filename: str) -> list:
     return lines
 
 
-def encode_sequences(lines: list) -> (list, int):
-    """encodes sequences into arrays of tokens
-    Args: sequences(list)
-    Returns: tokenized sequences(list) and vocab size(int)"""
-    tk = Tokenizer()
-    tk.fit_on_texts(lines)
+def encode_sequences(lines: list) -> (np.array, int):
+    """encodes sequences into arrays of tokens"""
+    # load tokenizer
+    tk = load(open(os.path.join(config.PATH, config.TOKENIZER_FILE), 'rb'))
     sequences = tk.texts_to_sequences(lines)
-    dump(tk, open(os.path.join(config.PATH, config.TOKENIZER_FILE), 'wb'))
     # vocabulary size
     vocab_size = len(tk.word_index) + 1
     print("Vocabulary size is %d" % vocab_size)
@@ -119,5 +116,14 @@ def load_final(filename):
     sequences = create_seq(50, tokens)
     sequences, vocab_size = encode_sequences(sequences)
     X, y = inputs_outputs(sequences, vocab_size)
+
+    return X, y
+
+
+def load_data(chunk: str) -> (np.array, np.array):
+    tokens = clean_doc(chunk)
+    sequence = create_seq(50, tokens=tokens)
+    sequences, vocab_size = encode_sequences(lines=sequence)
+    X, y = inputs_outputs(sequences=sequences)
 
     return X, y
